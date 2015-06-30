@@ -4,7 +4,7 @@
 ###########################################################################################################
 
 import csv
-import numpy
+import numpy as np
 import struct as st
 import os
 
@@ -29,7 +29,7 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64):
     #Filtering for noise
     filter_list=[]
     fc=5
-    initial_mean=numpy.mean(final_list[0:5])
+    initial_mean=np.mean(final_list[0:5])
     lockNum=0
     print fc < len(final_list)
     while fc < len(final_list):
@@ -39,7 +39,7 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64):
             break
         else:
             fc+=1
-            initial_mean=numpy.mean(final_list[(fc-5):fc])
+            initial_mean=np.mean(final_list[(fc-5):fc])
     for e in range(lockNum,len(final_list)):
         filter_list.append(final_list[e])
     
@@ -53,12 +53,12 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64):
         #print j
         final.append(filter_list[k])
         k+=Num_Skip
-        j+=1
+        j+=1 
     #print final
     #print(len(final))
     #Calculate necessary values
-    mean=numpy.mean(final)
-    stdv=numpy.std(final)
+    mean=np.mean(final)
+    stdv=np.std(final)
     Upper_Thresh=mean+(stdv*Alpha)
     Lower_Thresh=mean-(stdv*Alpha)
     

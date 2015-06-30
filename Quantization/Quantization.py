@@ -1,7 +1,8 @@
 #Written by Dabin Lee
 #Last update 2015.06.30
-
 #Import necessary libraries
+###########################################################################################################
+
 import csv
 import numpy
 import struct as st

@@ -8,10 +8,11 @@ import numpy as np
 import struct as st
 import os
 
+
 def Quant(OpenName,Alpha=0.2,Num_Samples=64):
     
     #Open csv file as a list \
-    with open(os.getcwd()+OpenName+".csv",'rb') as csvfile:
+    with open(os.getcwd()+"\\"+OpenName+".csv",'rb') as csvfile:
         reader = csv.reader(csvfile)
         val_list = list(reader)
         
@@ -78,17 +79,20 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64):
             csv_list.append(0)
     
     #Output to CSV file
-    outputCSVFile = open(os.getcwd()+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".csv",'wb')
+    outputCSVFile = open(os.getcwd()+"\\"+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".csv",'wb')
     wr = csv.writer(outputCSVFile,quoting=csv.QUOTE_ALL)
     wr.writerow(csv_list)
     outputCSVFile.close()
     csvfile.close()
     
-    #Output to Binary file for NIST Analysis
-    outputBINFile = open(os.getcwd()+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".dat",'wb')
-    binData = 'f'*len(csv_list)
-    bin=st.pack(binData,*csv_list)
-    print(bin)
-    outputBINFile.write(bin)
-    outputBINFile.close()
-    
+    #Output to ASCII file for NIST Analysis
+    outputASCIIFile = open(os.getcwd()+"\\"+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".dat",'w')
+    for item in csv_list:
+        print item
+        outputASCIIFile.write(str(item))
+#     binData = 'f'*len(csv_list)
+#     bin=st.pack(binData,*csv_list)
+#     print(bin)
+#     outputBINFile.write(bin)
+    outputASCIIFile.close()
+Quant("Movement Close Eve")

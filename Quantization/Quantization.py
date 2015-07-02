@@ -8,8 +8,11 @@ import numpy as np
 import struct as st
 import os
 
+def Quant2(OpenName1,OpenName2,Alpha=0.2,Num_Samples=64,Filtering=True):
+    Quant(OpenName1,Alpha,Num_Samples,Filtering)
+    Quant(OpenName2,Alpha,Num_Samples,Filtering)
 
-def Quant(OpenName,Alpha=0.2,Num_Samples=64):
+def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
     
     #Open csv file as a list \
     with open(os.getcwd()+"\\"+OpenName+".csv",'rb') as csvfile:
@@ -27,25 +30,28 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64):
     for i in range(0,len(val_list)):
         final_list.append(float(val_list[i][0]))
         
-    #Filtering for noise
-    filter_list=[]
-    fc=5
-    initial_mean=np.mean(final_list[0:5])
-    lockNum=0
-    print fc < len(final_list)
-    while fc < len(final_list):
-        print "Number to check:",final_list[fc],"Stand:",(initial_mean-(initial_mean*0.3)) 
-        if final_list[fc] >= (initial_mean-(initial_mean*0.3)):
-            lockNum=fc
-            break
-        else:
-            fc+=1
-            initial_mean=np.mean(final_list[(fc-5):fc])
-    for e in range(lockNum,len(final_list)):
-        filter_list.append(final_list[e])
-    
-    print len(filter_list)
-
+    #Filtering for noise [Skip if False]
+    if Filtering==True:
+        filter_list=[]
+        fc=5
+        initial_mean=np.mean(final_list[0:5])
+        lockNum=0
+        print fc < len(final_list)
+        while fc < len(final_list):
+            print "Number to check:",final_list[fc],"Stand:",(initial_mean-(initial_mean*0.3)) 
+            if final_list[fc] >= (initial_mean-(initial_mean*0.3)):
+                lockNum=fc
+                break
+            else:
+                fc+=1
+                initial_mean=np.mean(final_list[(fc-5):fc])
+        for e in range(lockNum,len(final_list)):
+            filter_list.append(final_list[e])
+        
+        print len(filter_list)
+    else:
+        filter_list=final_list
+        
     final=[]
     Num_Skip=len(filter_list)/Num_Samples
     j=0
@@ -95,4 +101,14 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64):
 #     print(bin)
 #     outputBINFile.write(bin)
     outputASCIIFile.close()
-Quant("Movement Close Eve")
+Name1="Readings_Alice"
+Name2="Readings_Bob"
+
+Quant(Name1,0.1,64,False)
+Quant(Name1,0.2,64,False)
+Quant(Name1,0.3,64,False)
+Quant(Name1,0.4,64,False)
+Quant(Name2,0.1,64,False)
+Quant(Name2,0.2,64,False)
+Quant(Name2,0.3,64,False)
+Quant(Name2,0.4,64,False)

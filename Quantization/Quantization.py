@@ -1,5 +1,5 @@
 #Written by Dabin Lee
-#Last update 2015.06.30
+#Last update 2015.07.03
 #Import necessary libraries
 ###########################################################################################################
 
@@ -19,12 +19,13 @@ def compare2(OpenName1,OpenName2):
         val_list2 = list(reader2)
     
     #Set global length for comparison
+    
     GlobalLength=0
     if len(val_list1[0]) >= len(val_list2[0]):
         GlobalLength=len(val_list2[0])
     elif len(val_list2[0]) < len(val_list1[0]):
         GlobalLength=len(val_list1[0])
-        
+    print GlobalLength    
     #Initialize Error Counter
     ErrorCounter=0.00
     i=0
@@ -101,10 +102,10 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
     Lower_Thresh=mean-(stdv*Alpha)
     
     #Printouts to let the user know about the data
-    print "Arithmetic mean:",mean
-    print "Stan. deviation:",stdv
-    print "Upper Threshold:",Upper_Thresh
-    print "Lower Threshold:",Lower_Thresh
+#     print "Arithmetic mean:",mean
+#     print "Stan. deviation:",stdv
+#     print "Upper Threshold:",Upper_Thresh
+#     print "Lower Threshold:",Lower_Thresh
     #print final
     
     #Quantization
@@ -125,7 +126,7 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
     #Output to ASCII file for NIST Analysis
     outputASCIIFile = open(os.getcwd()+"\\"+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".dat",'w')
     for item in csv_list:
-        print item
+#         print item
         outputASCIIFile.write(str(item))
 #     binData = 'f'*len(csv_list)
 #     bin=st.pack(binData,*csv_list)
@@ -134,7 +135,14 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
     outputASCIIFile.close()
 Name1="Readings_Alice"
 Name2="Readings_Bob"
-
+i=0
+Sample=64
+SSample=str(Sample)
+while i < 10:
+    Quant2(Name1, Name2, i/10.00, Sample, False)
+    compare2(Name1+"A_"+str(i/10.00)+"S_"+SSample,Name2+"A_"+str(i/10.00)+"S_"+SSample)
+    i+=1
+    
 # Quant(Name1,0.1,64,False)
 # Quant(Name1,0.2,64,False)
 # Quant(Name1,0.3,64,False)
@@ -143,4 +151,7 @@ Name2="Readings_Bob"
 # Quant(Name2,0.2,64,False)
 # Quant(Name2,0.3,64,False)
 # Quant(Name2,0.4,64,False)
-compare2("Readings_AliceA_0.2S_64", "Readings_BobA_0.2S_64")
+# compare2("Readings_AliceA_0.1S_64", "Readings_BobA_0.1S_64")
+# compare2("Readings_AliceA_0.2S_64", "Readings_BobA_0.2S_64")
+# compare2("Readings_AliceA_0.3S_64", "Readings_BobA_0.3S_64")
+# compare2("Readings_AliceA_0.4S_64", "Readings_BobA_0.4S_64")

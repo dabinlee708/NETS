@@ -8,6 +8,37 @@ import numpy as np
 import struct as st
 import os
 
+def compare2(OpenName1,OpenName2):
+    
+    #Open two .CSV files for comparison
+    with open(os.getcwd()+"\\"+OpenName1+".csv",'rb') as file1:
+        reader1 = csv.reader(file1)
+        val_list1 = list(reader1)
+    with open(os.getcwd()+"\\"+OpenName2+".csv",'rb') as file2:
+        reader2 = csv.reader(file2)
+        val_list2 = list(reader2)
+    
+    #Set global length for comparison
+    GlobalLength=0
+    if len(val_list1[0]) >= len(val_list2[0]):
+        GlobalLength=len(val_list2[0])
+    elif len(val_list2[0]) < len(val_list1[0]):
+        GlobalLength=len(val_list1[0])
+        
+    #Initialize Error Counter
+    ErrorCounter=0.00
+    i=0
+    while i < GlobalLength:
+        if val_list1[0][i]==val_list2[0][i]:
+            i+=1
+        else:
+            ErrorCounter+=1.00
+            i+=1
+    
+    #Output
+    print OpenName1,OpenName2,"Mismatch Rate:",(ErrorCounter/GlobalLength)
+    
+    
 def Quant2(OpenName1,OpenName2,Alpha=0.2,Num_Samples=64,Filtering=True):
     Quant(OpenName1,Alpha,Num_Samples,Filtering)
     Quant(OpenName2,Alpha,Num_Samples,Filtering)
@@ -104,11 +135,12 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
 Name1="Readings_Alice"
 Name2="Readings_Bob"
 
-Quant(Name1,0.1,64,False)
-Quant(Name1,0.2,64,False)
-Quant(Name1,0.3,64,False)
-Quant(Name1,0.4,64,False)
-Quant(Name2,0.1,64,False)
-Quant(Name2,0.2,64,False)
-Quant(Name2,0.3,64,False)
-Quant(Name2,0.4,64,False)
+# Quant(Name1,0.1,64,False)
+# Quant(Name1,0.2,64,False)
+# Quant(Name1,0.3,64,False)
+# Quant(Name1,0.4,64,False)
+# Quant(Name2,0.1,64,False)
+# Quant(Name2,0.2,64,False)
+# Quant(Name2,0.3,64,False)
+# Quant(Name2,0.4,64,False)
+compare2("Readings_AliceA_0.2S_64", "Readings_BobA_0.2S_64")

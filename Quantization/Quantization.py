@@ -11,10 +11,10 @@ import os
 def compare2(OpenName1,OpenName2):
     
     #Open two .CSV files for comparison
-    with open(os.getcwd()+"\\"+OpenName1+".csv",'rb') as file1:
+    with open(os.getcwd()+"/Output_Data/"+OpenName1+".csv",'rb') as file1:
         reader1 = csv.reader(file1)
         val_list1 = list(reader1)
-    with open(os.getcwd()+"\\"+OpenName2+".csv",'rb') as file2:
+    with open(os.getcwd()+"/Output_Data/"+OpenName2+".csv",'rb') as file2:
         reader2 = csv.reader(file2)
         val_list2 = list(reader2)
     
@@ -47,7 +47,7 @@ def Quant2(OpenName1,OpenName2,Alpha=0.2,Num_Samples=64,Filtering=True):
 def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
     
     #Open csv file as a list \
-    with open(os.getcwd()+"\\"+OpenName+".csv",'rb') as csvfile:
+    with open(os.getcwd()+"//Source_Data//"+OpenName+".csv",'rb') as csvfile:
         reader = csv.reader(csvfile)
         val_list = list(reader)
         
@@ -117,14 +117,14 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
             csv_list.append(0)
     
     #Output to CSV file
-    outputCSVFile = open(os.getcwd()+"\\"+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".csv",'wb')
+    outputCSVFile = open(os.getcwd()+"//Output_Data//"+OpenName+"\\"+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".csv",'wb')
     wr = csv.writer(outputCSVFile,quoting=csv.QUOTE_ALL)
     wr.writerow(csv_list)
     outputCSVFile.close()
     csvfile.close()
     
     #Output to ASCII file for NIST Analysis
-    outputASCIIFile = open(os.getcwd()+"\\"+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".dat",'w')
+    outputASCIIFile = open(os.getcwd()+"//Output_Data//"+OpenName+"\\"+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".dat",'w')
     for item in csv_list:
 #         print item
         outputASCIIFile.write(str(item))

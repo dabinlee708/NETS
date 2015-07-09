@@ -11,10 +11,10 @@ import os
 def compare2(OpenName1,OpenName2):
     
     #Open two .CSV files for comparison
-    with open(os.getcwd()+"/Output_Data/"+OpenName1+".csv",'rb') as file1:
+    with open(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName1+".csv",'rb') as file1:
         reader1 = csv.reader(file1)
         val_list1 = list(reader1)
-    with open(os.getcwd()+"/Output_Data/"+OpenName2+".csv",'rb') as file2:
+    with open(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName2+".csv",'rb') as file2:
         reader2 = csv.reader(file2)
         val_list2 = list(reader2)
     
@@ -37,7 +37,9 @@ def compare2(OpenName1,OpenName2):
             i+=1
     
     #Output
-    print OpenName1,OpenName2,"Mismatch Rate:",(ErrorCounter/GlobalLength)
+    print "Files compared:\n",OpenName1+"\n",OpenName2+"\n"
+    print "Mismatch Rate:",(ErrorCounter/GlobalLength)
+    print "Match Rate:",(1-((ErrorCounter/GlobalLength)))
     
     
 def Quant2(OpenName1,OpenName2,Alpha=0.2,Num_Samples=64,Filtering=True):
@@ -52,7 +54,7 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
         Sampling=True
     
     #Open csv file as a list \
-    with open(os.getcwd()+"//Source_Data//"+OpenName+".csv",'rb') as csvfile:
+    with open(os.getcwd()+os.sep+"Source_Data"+os.sep+OpenName+".csv",'rb') as csvfile:
         reader = csv.reader(csvfile)
         val_list = list(reader)
         
@@ -127,19 +129,19 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
         elif final[i] <= Lower_Thresh:
             csv_list.append(0)
     
-    #Create folder
-    if not os.path.exists(os.getcwd()+"/Output_Data/"+OpenName):
-        os.makedirs(os.getcwd()+"/Output_Data/"+OpenName)
+#     #Create folder
+#     if not os.path.exists(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName):
+#         os.makedirs(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName)
     
     #Output to CSV file
-    outputCSVFile = open(os.getcwd()+"/Output_Data/"+OpenName+"/"+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".csv",'wb')
+    outputCSVFile = open(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".csv",'wb')
     wr = csv.writer(outputCSVFile,quoting=csv.QUOTE_ALL)
     wr.writerow(csv_list)
     outputCSVFile.close()
     csvfile.close()
     
     #Output to ASCII file for NIST Analysis
-    outputASCIIFile = open(os.getcwd()+"/Output_Data/"+OpenName+"/"+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".dat",'w')
+    outputASCIIFile = open(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".dat",'w')
     for item in csv_list:
 #         print item
         outputASCIIFile.write(str(item))
@@ -149,18 +151,19 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
 #     outputBINFile.write(bin)
     outputASCIIFile.close()
 
-Name1="Readings_Alice"
+Name1="Readings_Dabin"
 Name2="Readings_Bob"
 i=0
 Sample=64
 SSample=str(Sample)
 
 
-Quant(Name1,0.3333,0,False)
+# Quant(Name1,0.3333,0,False)
 
 # while i < 10:
 #     Quant2(Name1, Name2, i/10.00, Sample, False)
 #     compare2(Name1+"A_"+str(i/10.00)+"S_"+SSample,Name2+"A_"+str(i/10.00)+"S_"+SSample)
 #     i+=1
 # Quant(Name1,0.1,64,False)
-# compare2("Readings_AliceA_0.1S_64", "Readings_BobA_0.1S_64")
+Quant2(Name1, Name2, 0.1, 64, False)
+compare2("Readings_DabinA_0.1S_64", "Readings_BobA_0.1S_64")

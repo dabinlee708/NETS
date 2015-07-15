@@ -7,6 +7,14 @@ import csv
 import numpy as np
 import struct as st
 import os
+import hashlib as hl
+
+
+# def hashList(list):
+#     m=hashlib.sha256()
+#     m.update(list)
+#     m.hexdigest()
+    
 
 def compare2(OpenName1,OpenName2):
     
@@ -47,6 +55,7 @@ def Quant2(OpenName1,OpenName2,Alpha=0.2,Num_Samples=64,Filtering=True):
     Quant(OpenName2,Alpha,Num_Samples,Filtering)
 
 def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
+    print OpenName
     #Set sampling count
     if Num_Samples==0:
         Sampling=False
@@ -133,6 +142,12 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
 #     if not os.path.exists(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName):
 #         os.makedirs(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName)
     
+    #Prepare List for hash function
+    listForHash=[]
+    for item in csv_list:
+        listForHash.append(str(item))
+    
+    print "List For Hash",listForHash
     #Output to CSV file
     outputCSVFile = open(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".csv",'wb')
     wr = csv.writer(outputCSVFile,quoting=csv.QUOTE_ALL)
@@ -150,6 +165,16 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
 #     print(bin)
 #     outputBINFile.write(bin)
     outputASCIIFile.close()
+    print listForHash
+    ransom=''.join(listForHash)
+    print "Key:",ransom
+    m=hl.sha256()
+    m.update(ransom)
+    print "SHA256:",(m.hexdigest())
+
+    
+#     hashList(ransom)
+    print "======================================="
 
 Name1="Readings_Dabin"
 Name2="Readings_Bob"

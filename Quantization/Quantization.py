@@ -126,10 +126,10 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
     Lower_Thresh=mean-(stdv*Alpha)
     
     #Printouts to let the user know about the data
-    print "Arithmetic mean:",mean
-    print "Stan. deviation:",stdv
-    print "Upper Threshold:",Upper_Thresh
-    print "Lower Threshold:",Lower_Thresh
+#     print "Arithmetic mean:",mean
+#     print "Stan. deviation:",stdv
+#     print "Upper Threshold:",Upper_Thresh
+#     print "Lower Threshold:",Lower_Thresh
     #print final
     
     #Quantization
@@ -149,7 +149,7 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
     for item in csv_list:
         listForHash.append(str(item))
     
-    print "List For Hash",listForHash
+#     print "List For Hash",listForHash
     #Output to CSV file
     outputCSVFile = open(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".csv",'wb')
     wr = csv.writer(outputCSVFile,quoting=csv.QUOTE_ALL)
@@ -167,12 +167,12 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
 #     print(bin)
 #     outputBINFile.write(bin)
     outputASCIIFile.close()
-    print listForHash
+#     print listForHash
     ransom=''.join(listForHash)
-    print "Key:",ransom
+#     print "Key:",ransom
     m=hl.sha256()
     m.update(ransom)
-    print "SHA256:",(m.hexdigest())
+#     print "SHA256:",(m.hexdigest())
 
     
 #     hashList(ransom)
@@ -181,15 +181,15 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
 Name1="Readings_Alice"
 Name2="Readings_Bob"
 i=0
-Sample=128
+Sample=64
 SSample=str(Sample)
 
 
 # Quant(Name1,0.3333,0,False)
 
-while i < 10:
-    Quant2(Name1, Name2, i/10.00, Sample, False)
-    compare2(Name1+"A_"+str(i/10.00)+"S_"+SSample,Name2+"A_"+str(i/10.00)+"S_"+SSample)
+while i < 20:
+    Quant2(Name1, Name2, i/20.00, Sample, False)
+    compare2(Name1+"A_"+str(i/20.00)+"S_"+SSample,Name2+"A_"+str(i/20.00)+"S_"+SSample)
     i+=1
 # Quant(Name1,0.1,64,False)
 # Quant2(Name1, Name2, 0.1, 64, False)

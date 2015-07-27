@@ -46,9 +46,11 @@ def compare2(OpenName1,OpenName2):
     
     #Output
     print "Files compared:\n",OpenName1+"\n",OpenName2+"\n"
-    print "Mismatch Rate:",(ErrorCounter/GlobalLength)
-    print "Match Rate:",(1-((ErrorCounter/GlobalLength)))
-    
+    if GlobalLength!=0:
+        print "Mismatch Rate:",(ErrorCounter/GlobalLength)
+        print "Match Rate:",(1-((ErrorCounter/GlobalLength)))
+    else:
+        print "length is 0"
     
 def Quant2(OpenName1,OpenName2,Alpha=0.2,Num_Samples=64,Filtering=True):
     Quant(OpenName1,Alpha,Num_Samples,Filtering)
@@ -176,19 +178,19 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
 #     hashList(ransom)
     print "======================================="
 
-Name1="Readings_Dabin"
+Name1="Readings_Alice"
 Name2="Readings_Bob"
 i=0
-Sample=64
+Sample=128
 SSample=str(Sample)
 
 
 # Quant(Name1,0.3333,0,False)
 
-# while i < 10:
-#     Quant2(Name1, Name2, i/10.00, Sample, False)
-#     compare2(Name1+"A_"+str(i/10.00)+"S_"+SSample,Name2+"A_"+str(i/10.00)+"S_"+SSample)
-#     i+=1
+while i < 10:
+    Quant2(Name1, Name2, i/10.00, Sample, False)
+    compare2(Name1+"A_"+str(i/10.00)+"S_"+SSample,Name2+"A_"+str(i/10.00)+"S_"+SSample)
+    i+=1
 # Quant(Name1,0.1,64,False)
-Quant2(Name1, Name2, 0.1, 64, False)
-compare2("Readings_DabinA_0.1S_64", "Readings_BobA_0.1S_64")
+# Quant2(Name1, Name2, 0.1, 64, False)
+# compare2("Readings_DabinA_0.1S_64", "Readings_BobA_0.1S_64")

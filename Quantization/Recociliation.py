@@ -21,13 +21,13 @@ def reconcil(list1,list2):
         
     if len(list1)==1:
         if list1==list2:
-            return list1
+            return ''.join(str(x) for x in list1)
         else:
-            exit
+            return ''
     else:            
         #Compare Hash Values:
         if (hasha==hashb):
-            return list1
+            return ''.join(str(x) for x in list1)
         else:
         #Slice lists and replace original lists
             list1a=list1[0:len(list1)/2]
@@ -37,13 +37,14 @@ def reconcil(list1,list2):
             
         #Print out sliced lists
         print "list1a",list1a,'\n',"list2a",list2a,"\n","list1b",list1b,'\n',"list2b",list2b
-        print (reconcil(list1a, list2a),reconcil(list1b, list2b))
+        return (reconcil(list1a, list2a))+(reconcil(list1b, list2b))
            
         
 #Sample lists for testing
 a=[1,0,1,1,1,0,0,1,1,1,0,1,1,1,0,0,0,0,1,1,0,1,0,0,1,1,0,0,0,1,1,1,0,1,0,1,0,1,1,0]
 b=[1,0,1,1,1,0,0,1,1,1,0,1,1,1,0,0,0,0,1,1,0,1,0,0,1,1,1,0,0,1,1,1,0,0,0,1,0,1,1,1]
-
+c=[1,0,1,1,1,0,0,1,1,1,0,1,1,1,0,0,0,0,1,1,0,1,0,0,1,1,0,0,1,1,1,0,0,1,0,1,1]
+d=[1,0,1,1,1,0,0,1,1,1,0,1,1,1,0,0,0,0,1,1,0,1,0,0,1,1,0,0,1,1,1,0,0,1,0,1,1]
 #Execute reconciliation function
-reconcil(a,b)
+print (reconcil(a,b))
 

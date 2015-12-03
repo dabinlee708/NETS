@@ -23,14 +23,14 @@ def csvToList2(Name1, Name2):
 
 def csvToList3(Name1, Name2, Name3):
     return csvToList(Name1), csvToList(Name2), csvToList(Name3)
-    
-def compare2(OpenName1,OpenName2):    
+
+def compare2(Name1,Name2):    
     #Open two .CSV files for comparison
-    with open(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName1+".csv",'rb') as file1:
+    with open(os.getcwd()+os.sep+"Output_Data"+os.sep+Name1+".csv",'rb') as file1:
         reader1 = csv.reader(file1)
         val_list1 = list(reader1)
 #         print "val_list",val_list1
-    with open(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName2+".csv",'rb') as file2:
+    with open(os.getcwd()+os.sep+"Output_Data"+os.sep+Name2+".csv",'rb') as file2:
         reader2 = csv.reader(file2)
         val_list2 = list(reader2)
     
@@ -53,7 +53,7 @@ def compare2(OpenName1,OpenName2):
             i+=1
     
     #Output
-    print "Files compared:\n",OpenName1+"\n",OpenName2
+    print "Files compared:\n",Name1+"\n",Name2
     if GlobalLength!=0:
         print "Mismatch Rate:",(ErrorCounter/GlobalLength)
         print "Match Rate:",(1-((ErrorCounter/GlobalLength)))
@@ -62,17 +62,25 @@ def compare2(OpenName1,OpenName2):
     else:
         print "length is 0"
         print "============================================="
-def Quant3(OpenName1, OpenName2, OpenName3, Alpha = 0.2, Num_Samples = 64, Filtering = True):
-    Quant(OpenName1,Alpha,Num_Samples,Filtering)
-    Quant(openName2,Alpha,Num_Samples,Filtering)
-    Quant(OpenName3,Alpha,Num_Samples,Filtering)
 
-def Quant2(OpenName1,OpenName2,Alpha=0.2,Num_Samples=64,Filtering=True):
-    Quant(OpenName1,Alpha,Num_Samples,Filtering)
-    Quant(OpenName2,Alpha,Num_Samples,Filtering)
+def compare3(Name1, Name2, Name3):
+    compare2(Name1, Name2)
+    compare2(Name2, Name3)
+    compare2(Name1, Name3)
+    print "Compare3 of ",Name1,Name2," and ",Name3," has completed."
 
-def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
-    print "Quantization\nFile Name:\t",OpenName,"\nAlpha ",Alpha,"\nNumber of Samples ",Num_Samples,"\nFiltering Option ",Filtering
+
+def Quant3(n1, n2, n3, Alpha = 0.2, Num_Samples = 64, Filtering = True):
+    Quant(n1,Alpha,Num_Samples,Filtering)
+    Quant(n2,Alpha,Num_Samples,Filtering)
+    Quant(n3,Alpha,Num_Samples,Filtering)
+
+def Quant2(n1,n2,Alpha=0.2,Num_Samples=64,Filtering=True):
+    Quant(n1,Alpha,Num_Samples,Filtering)
+    Quant(n2,Alpha,Num_Samples,Filtering)
+
+def Quant(n1,Alpha=0.2,Num_Samples=64,Filtering=True):
+    print "Quantization\nFile Name:\t",n1,"\nAlpha ",Alpha,"\nNumber of Samples ",Num_Samples,"\nFiltering Option ",Filtering
 
     #Set sampling count
     if Num_Samples==0:
@@ -81,7 +89,7 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
         Sampling=True
     
     #Open csv file as a list \
-    with open(os.getcwd()+os.sep+"Source_Data"+os.sep+OpenName+".csv",'rb') as csvfile:
+    with open(os.getcwd()+os.sep+"Source_Data"+os.sep+n1+".csv",'rb') as csvfile:
         reader = csv.reader(csvfile)
         val_list = list(reader)
         
@@ -160,39 +168,64 @@ def Quant(OpenName,Alpha=0.2,Num_Samples=64,Filtering=True):
             csv_list.append(0)
     
 #     #Create folder
-#     if not os.path.exists(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName):
-#         os.makedirs(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName)
+#     if not os.path.exists(os.getcwd()+os.sep+"Output_Data"+os.sep+n1):
+#         os.makedirs(os.getcwd()+os.sep+"Output_Data"+os.sep+n1)
     
-    #Prepare List for hash function
-    listForHash=[]
-    for item in csv_list:
-        listForHash.append(str(item))
+    # #Prepare List for hash function
+    # listForHash=[]
+    # for item in csv_list:
+    #     listForHash.append(str(item))
     
 #     print "List For Hash",listForHash
     #Output to CSV file
-    outputCSVFile = open(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".csv",'wb')
+    outputCSVFile = open(os.getcwd()+os.sep+"Output_Data"+os.sep+n1+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".csv",'wb')
     wr = csv.writer(outputCSVFile,quoting=csv.QUOTE_ALL)
     wr.writerow(csv_list)
     outputCSVFile.close()
     csvfile.close()
     
-    #Output to ASCII file for NIST Analysis
-    outputASCIIFile = open(os.getcwd()+os.sep+"Output_Data"+os.sep+OpenName+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".dat",'w')
-    for item in csv_list:
-#         print item
-        outputASCIIFile.write(str(item))
+#     #Output to ASCII file for NIST Analysis
+#     outputASCIIFile = open(os.getcwd()+os.sep+"Output_Data"+os.sep+n1+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".dat",'w')
+#     for item in csv_list:
+# #         print item
+#         outputASCIIFile.write(str(item))
 #     binData = 'f'*len(csv_list)
 #     bin=st.pack(binData,*csv_list)
 #     print(bin)
 #     outputBINFile.write(bin)
-    outputASCIIFile.close()
-#     print listForHash
-    ransom=''.join(listForHash)
-#     print "Key:",ransom
-    m=hl.sha256()
-    m.update(ransom)
+    # outputASCIIFile.close()
+# #     print listForHash
+#     ransom=''.join(listForHash)
+# #     print "Key:",ransom
+#     m=hl.sha256()
+#     m.update(ransom)
 #     print "SHA256:",(m.hexdigest())
 
     
 #     hashList(ransom)
-    print "======================================="        
+    print "=======================================" 
+
+def quant_comp_graph_3(n1, n2, n3, Alpha_s=0.0, Alpha_e=1.0, Alpha_step=0.05, Sample=128, Filtering=True):
+    print n1, n2, n3
+    #Generate Alpha value lists
+    x=0.00
+    Alpha_list=[]
+    while x <= Alpha_e:
+        print x
+        Alpha_list.append(round(x,3))
+        x+=Alpha_step
+        Quant3(n1, n2, n3, round(x,3), Sample, Filtering)
+        Compare3(n1+"A_"+str(round(x,3))+"S_"+Sample,n2+"A_"+str(round(x,3))+"S_"+Sample,n3+"A_"+str(round(x,3))+"S_"+Sample)
+
+
+quant_comp_graph_3("Movement Close Bob","Movement Close Eve","Movement Close Test")
+
+# import matplotlib.pyplot as plt
+# Alpha_list=[]
+# for x in range(0,10):
+#     Alpha_list.append(0.1*x)
+# print Alpha_list
+# plt.plot([0.0,0.2,0.4,0.6,0.8,1.0,0.2,0.4,0.6,0.8,1.0],Alpha_list)
+# plt.ylabel('Bit mismatch rate')
+# plt.xlabel('Alpha Values')
+# plt.show()

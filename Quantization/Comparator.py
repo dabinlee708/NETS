@@ -4,6 +4,8 @@ import struct as st
 import hashlib as hl
 import itertools as it
 import os
+import matplotlib.pyplot as plt
+
 
 def csvToList(Name1):
     
@@ -12,7 +14,7 @@ def csvToList(Name1):
         reader1 = csv.reader(file1)
         val_list1 = list(reader1)
     #print "val_list",val_list1    
-    print val_list1
+    # print val_list1
     list1=[]
     for i in range(0,len(val_list1[0])):
         list1.append(int(val_list1[0][i]))
@@ -41,7 +43,7 @@ def compare2(Name1,Name2):
         GlobalLength=len(val_list2[0])
     elif len(val_list2[0]) < len(val_list1[0]):
         GlobalLength=len(val_list1[0])
-    print "Length of the shorter key:",GlobalLength    
+    # print "Length of the shorter key:",GlobalLength    
     #Initialize Error Counter
     ErrorCounter=0.00
     i=0
@@ -53,21 +55,22 @@ def compare2(Name1,Name2):
             i+=1
     
     #Output
-    print "Files compared:\n",Name1+"\n",Name2
+    # print "Files compared:\n",Name1+"\n",Name2
     if GlobalLength!=0:
-        print "Mismatch Rate:",(ErrorCounter/GlobalLength)
-        print "Match Rate:",(1-((ErrorCounter/GlobalLength)))
+        # print "Mismatch Rate:",(ErrorCounter/GlobalLength)
+        return round((ErrorCounter/GlobalLength),8)
+        # print "Mismatch Rate:",(ErrorCounter/GlobalLength)
+        # print "Match Rate:",(1-((ErrorCounter/GlobalLength)))
         
-        print "============================================="
+        # print "============================================="
     else:
-        print "length is 0"
-        print "============================================="
+        return 0
+        # print "length is 0"
+        # print "============================================="
 
 def compare3(Name1, Name2, Name3):
-    compare2(Name1, Name2)
-    compare2(Name2, Name3)
-    compare2(Name1, Name3)
-    print "Compare3 of ",Name1,Name2," and ",Name3," has completed."
+    return [compare2(Name1, Name2), compare2(Name2, Name3), compare2(Name1, Name3)]
+    # print "Compare3 of ",Name1,Name2," and ",Name3," has completed."
 
 
 def Quant3(n1, n2, n3, Alpha = 0.2, Num_Samples = 64, Filtering = True):
@@ -80,7 +83,7 @@ def Quant2(n1,n2,Alpha=0.2,Num_Samples=64,Filtering=True):
     Quant(n2,Alpha,Num_Samples,Filtering)
 
 def Quant(n1,Alpha=0.2,Num_Samples=64,Filtering=True):
-    print "Quantization\nFile Name:\t",n1,"\nAlpha ",Alpha,"\nNumber of Samples ",Num_Samples,"\nFiltering Option ",Filtering
+    # print "Quantization\nFile Name:\t",n1,"\nAlpha ",Alpha,"\nNumber of Samples ",Num_Samples,"\nFiltering Option ",Filtering
 
     #Set sampling count
     if Num_Samples==0:
@@ -113,9 +116,9 @@ def Quant(n1,Alpha=0.2,Num_Samples=64,Filtering=True):
         fc=5
         initial_mean=np.mean(final_list[0:5])
         lockNum=0
-        print fc < len(final_list)
+        # print fc < len(final_list)
         while fc < len(final_list):
-            print "Number to check:",final_list[fc],"Stand:",(initial_mean-(initial_mean*0.3)) 
+            # print "Number to check:",final_list[fc],"Stand:",(initial_mean-(initial_mean*0.3)) 
             if final_list[fc] >= (initial_mean-(initial_mean*0.3)):
                 lockNum=fc
                 break
@@ -125,7 +128,7 @@ def Quant(n1,Alpha=0.2,Num_Samples=64,Filtering=True):
         for e in range(lockNum,len(final_list)):
             filter_list.append(final_list[e])
         
-        print len(filter_list)
+        # print len(filter_list)
     else:
         filter_list=final_list
     
@@ -203,29 +206,67 @@ def Quant(n1,Alpha=0.2,Num_Samples=64,Filtering=True):
 
     
 #     hashList(ransom)
-    print "=======================================" 
+    # print "=======================================" 
+# def graph_save(AlphaList, MismatchList, )
+
 
 def quant_comp_graph_3(n1, n2, n3, Alpha_s=0.0, Alpha_e=1.0, Alpha_step=0.05, Sample=128, Filtering=True):
     print n1, n2, n3
     #Generate Alpha value lists
     x=0.00
     Alpha_list=[]
+    comp_1_2=[]
+    comp_2_3=[]
+    comp_1_3=[]
+
     while x <= Alpha_e:
-        print x
+        temp_list=[]
+        # print x
         Alpha_list.append(round(x,3))
+        Quant3(n1, n2, n3, x, Sample, Filtering)
+        temp_list=compare3(n1+"A_"+str(x)+"S_"+str(Sample),n2+"A_"+str(x)+"S_"+str(Sample),n3+"A_"+str(x)+"S_"+str(Sample))
+        comp_1_2.append(temp_list[0])
+        comp_1_3.append(temp_list[1])
+        comp_2_3.append(temp_list[2])
         x+=Alpha_step
-        Quant3(n1, n2, n3, round(x,3), Sample, Filtering)
-        Compare3(n1+"A_"+str(round(x,3))+"S_"+Sample,n2+"A_"+str(round(x,3))+"S_"+Sample,n3+"A_"+str(round(x,3))+"S_"+Sample)
+    print comp_1_2
+    print comp_1_3
+    print comp_2_3
 
 
-quant_comp_graph_3("Movement Close Bob","Movement Close Eve","Movement Close Test")
+    plt.title(n1+" and "+n2)
+    plt.ylabel('Bit mismatch rate')
+    plt.xlabel('Alpha')
+    plt.ylim(0.00,1.00)
+    plt.xlim(0.00,1.00)
+    plt.grid(True)
+    plt.plot(Alpha_list,comp_1_2,'red')
+    # plt.show()
+    plt.savefig("Bit Mismatch Rate vs Alpha with "+n1+" and "+n2+".png", format='png', dpi=600)    
+    plt.gcf().clear()
+    plt.ylabel('Bit mismatch rate')
+    plt.xlabel('Alpha') 
+    plt.ylim(0.00,1.00)
+    plt.xlim(0.00,1.00)
+    plt.grid(True)
+    plt.plot(Alpha_list,comp_1_3,'red')
+    plt.title(n1+" and "+n3)
+    plt.savefig("Bit Mismatch Rate vs Alpha with "+n1+" and "+n3+".png", format='png', dpi=600)
+    plt.gcf().clear()
+    plt.ylabel('Bit mismatch rate')
+    plt.xlabel('Alpha')
+    plt.ylim(0.00,1.00)
+    plt.xlim(0.00,1.00)
+    plt.grid(True)
+    plt.plot(Alpha_list,comp_2_3,'red')
+    plt.title(n2+" and "+n3)
+    plt.savefig("Bit Mismatch Rate vs Alpha with "+n2+" and "+n3+".png", format='png', dpi=600)
+    plt.gcf().clear()
 
-# import matplotlib.pyplot as plt
-# Alpha_list=[]
-# for x in range(0,10):
-#     Alpha_list.append(0.1*x)
-# print Alpha_list
-# plt.plot([0.0,0.2,0.4,0.6,0.8,1.0,0.2,0.4,0.6,0.8,1.0],Alpha_list)
+quant_comp_graph_3("Readings_Alice","Movement Close Eve","Closer_1cm_Eve_no movement")
+# mistmatchList=[]
+# Alpha_list=[0.00]
+# plt.plot(mismatchList,Alpha_list)
 # plt.ylabel('Bit mismatch rate')
 # plt.xlabel('Alpha Values')
 # plt.show()

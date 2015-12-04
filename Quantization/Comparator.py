@@ -261,6 +261,8 @@ def quant_comp_graph_3(n1, n2, n3, Alpha_s=0.0, Alpha_e=1.0, Alpha_step=0.05, Sa
     plt.plot(Alpha_list,comp_2_3,'red')
     plt.title(n2+" and "+n3)
     plt.savefig("Bit Mismatch Rate vs Alpha with "+n2+" and "+n3+".png", format='png', dpi=600)
+
+    plt.show()
     plt.gcf().clear()
 
 quant_comp_graph_3("Readings_Alice","Movement Close Eve","Closer_1cm_Eve_no movement")

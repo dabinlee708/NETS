@@ -9,12 +9,9 @@ import matplotlib.pyplot as plt
 
 def csvToList(Name1):
     
-    #Open a .CSV file for comparison
     with open(os.getcwd()+os.sep+"Output_Data"+os.sep+Name1+".csv",'rb') as file1:
         reader1 = csv.reader(file1)
         val_list1 = list(reader1)
-    #print "val_list",val_list1    
-    # print val_list1
     list1=[]
     for i in range(0,len(val_list1[0])):
         list1.append(int(val_list1[0][i]))
@@ -34,17 +31,12 @@ def compare2(Name1,Name2):
 #         print "val_list",val_list1
     with open(os.getcwd()+os.sep+"Output_Data"+os.sep+Name2+".csv",'rb') as file2:
         reader2 = csv.reader(file2)
-        val_list2 = list(reader2)
-    
-    #Set global length for comparison
-    
+        val_list2 = list(reader2)  
     GlobalLength=0
     if len(val_list1[0]) >= len(val_list2[0]):
         GlobalLength=len(val_list2[0])
     elif len(val_list2[0]) < len(val_list1[0]):
         GlobalLength=len(val_list1[0])
-    # print "Length of the shorter key:",GlobalLength    
-    #Initialize Error Counter
     ErrorCounter=0.00
     i=0
     while i < GlobalLength:
@@ -54,19 +46,10 @@ def compare2(Name1,Name2):
             ErrorCounter+=1.00
             i+=1
     
-    #Output
-    # print "Files compared:\n",Name1+"\n",Name2
     if GlobalLength!=0:
-        # print "Mismatch Rate:",(ErrorCounter/GlobalLength)
         return round((ErrorCounter/GlobalLength),8)
-        # print "Mismatch Rate:",(ErrorCounter/GlobalLength)
-        # print "Match Rate:",(1-((ErrorCounter/GlobalLength)))
-        
-        # print "============================================="
     else:
         return 0
-        # print "length is 0"
-        # print "============================================="
 
 def compare3(Name1, Name2, Name3):
     return [compare2(Name1, Name2), compare2(Name2, Name3), compare2(Name1, Name3)]
@@ -83,15 +66,11 @@ def Quant2(n1,n2,Alpha=0.2,Num_Samples=64,Filtering=True):
     Quant(n2,Alpha,Num_Samples,Filtering)
 
 def Quant(n1,Alpha=0.2,Num_Samples=64,Filtering=True):
-    # print "Quantization\nFile Name:\t",n1,"\nAlpha ",Alpha,"\nNumber of Samples ",Num_Samples,"\nFiltering Option ",Filtering
-
-    #Set sampling count
     if Num_Samples==0:
         Sampling=False
     else:
         Sampling=True
     
-    #Open csv file as a list \
     with open(os.getcwd()+os.sep+"Source_Data"+os.sep+n1+".csv",'rb') as csvfile:
         reader = csv.reader(csvfile)
         val_list = list(reader)
@@ -155,13 +134,6 @@ def Quant(n1,Alpha=0.2,Num_Samples=64,Filtering=True):
     Upper_Thresh=mean+(stdv*Alpha)
     Lower_Thresh=mean-(stdv*Alpha)
     
-    #Printouts to let the user know about the data
-#     print "Arithmetic mean:",mean
-#     print "Stan. deviation:",stdv
-#     print "Upper Threshold:",Upper_Thresh
-#     print "Lower Threshold:",Lower_Thresh
-    #print final
-    
     #Quantization
     csv_list=[]
     for i in range(0,len(final)):
@@ -170,46 +142,12 @@ def Quant(n1,Alpha=0.2,Num_Samples=64,Filtering=True):
         elif final[i] <= Lower_Thresh:
             csv_list.append(0)
     
-#     #Create folder
-#     if not os.path.exists(os.getcwd()+os.sep+"Output_Data"+os.sep+n1):
-#         os.makedirs(os.getcwd()+os.sep+"Output_Data"+os.sep+n1)
-    
-    # #Prepare List for hash function
-    # listForHash=[]
-    # for item in csv_list:
-    #     listForHash.append(str(item))
-    
-#     print "List For Hash",listForHash
-    #Output to CSV file
     outputCSVFile = open(os.getcwd()+os.sep+"Output_Data"+os.sep+n1+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".csv",'wb')
     wr = csv.writer(outputCSVFile,quoting=csv.QUOTE_ALL)
     wr.writerow(csv_list)
     outputCSVFile.close()
     csvfile.close()
     
-#     #Output to ASCII file for NIST Analysis
-#     outputASCIIFile = open(os.getcwd()+os.sep+"Output_Data"+os.sep+n1+"A_"+str(Alpha)+"S_"+str(Num_Samples)+".dat",'w')
-#     for item in csv_list:
-# #         print item
-#         outputASCIIFile.write(str(item))
-#     binData = 'f'*len(csv_list)
-#     bin=st.pack(binData,*csv_list)
-#     print(bin)
-#     outputBINFile.write(bin)
-    # outputASCIIFile.close()
-# #     print listForHash
-#     ransom=''.join(listForHash)
-# #     print "Key:",ransom
-#     m=hl.sha256()
-#     m.update(ransom)
-#     print "SHA256:",(m.hexdigest())
-
-    
-#     hashList(ransom)
-    # print "=======================================" 
-# def graph_save(AlphaList, MismatchList, )
-
-
 def quant_comp_graph_3(n1, n2, n3, Alpha_s=0.0, Alpha_e=1.0, Alpha_step=0.05, Sample=128, Filtering=True):
     print n1, n2, n3
     #Generate Alpha value lists
@@ -266,9 +204,3 @@ def quant_comp_graph_3(n1, n2, n3, Alpha_s=0.0, Alpha_e=1.0, Alpha_step=0.05, Sa
     plt.gcf().clear()
 
 quant_comp_graph_3("Readings_Alice","Movement Close Eve","Closer_1cm_Eve_no movement")
-# mistmatchList=[]
-# Alpha_list=[0.00]
-# plt.plot(mismatchList,Alpha_list)
-# plt.ylabel('Bit mismatch rate')
-# plt.xlabel('Alpha Values')
-# plt.show()
